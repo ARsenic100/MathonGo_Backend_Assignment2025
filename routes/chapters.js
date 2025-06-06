@@ -5,28 +5,58 @@ const router = express.Router();
 const { RateLimiterRedis } = require('rate-limiter-flexible');
 const redis = require('redis');
 
-// Redis client for rate limiting
+// Create a dedicated Redis client instance for use in this routes file
 const redisClient = redis.createClient({
   url: process.env.REDIS_URL,
 });
 
-// Rate limiter configuration
-const rateLimiter = new RateLimiterRedis({
-  storeClient: redisClient,
-  keyPrefix: 'rate_limit',
-  points: 30, // Number of requests
-  duration: 60, // Per minute
+// Handle connection errors for the Redis client
+redisClient.on('error', (err) => {
+    console.error('Redis Client Error in routes/chapters.js:', err);
 });
+
+// Connect Redis client and initialize rate limiter
+redisClient.connect().then(() => {
+    console.log('Redis client for routes/chapters.js connected successfully.');
+    // Initialize the rate limiter *after* the client is connected
+    rateLimiter = new RateLimiterRedis({
+        storeClient: redisClient, // Pass the connected client
+        keyPrefix: 'rate_limit',
+        points: 30, // 30 requests
+        duration: 60, // per 60 seconds (1 minute)
+    });
+    console.log('Rate limiter initialized successfully.');
+}).catch(err => {
+    console.error('Failed to connect Redis client for routes/chapters.js:', err);
+    // Depending on desired behavior, you might want to exit or disable rate limiting here
+});
+
+let rateLimiter; // Declare rateLimiter here to be accessible in middleware
 
 // Rate limiting middleware
 const rateLimiterMiddleware = async (req, res, next) => {
-  console.log(`[RateLimiter] Checking rate limit for IP: ${req.ip}`);
+  // Check if the rate limiter has been successfully initialized
+  if (!rateLimiter) {
+    console.error('[RateLimiter Middleware] Rate limiter is not initialized. Skipping rate limiting.');
+    // If Redis connection failed on startup, allow requests to pass (or return an error)
+    // Choosing to proceed without rate limiting if Redis is unavailable
+    return next(); 
+  }
+
+  console.log(`[RateLimiter Middleware] Checking rate limit for IP: ${req.ip}`);
+  // Log the rateLimiter object and its client just before consuming
+  console.log('[RateLimiter Middleware] Inspecting rateLimiter object before consume:', { 
+    rateLimiterInitialized: !!rateLimiter, // Check if it's truthy
+    rateLimiterClientExists: !!rateLimiter.client, // Check if client property exists
+    rateLimiterClientConnected: rateLimiter.client ? rateLimiter.client.isReady : 'N/A' // Check client connection status if possible
+  });
+
   try {
     await rateLimiter.consume(req.ip);
-    console.log(`[RateLimiter] IP ${req.ip} passed rate limit.`);
+    console.log(`[RateLimiter Middleware] IP ${req.ip} passed rate limit.`);
     next();
   } catch (error) {
-    console.error(`[RateLimiter] IP ${req.ip} failed rate limit:`, error.message);
+    console.error(`[RateLimiter Middleware] IP ${req.ip} failed rate limit:`, error.message);
     res.status(429).json({ message: 'Too many requests, please try again later.' });
   }
 };
