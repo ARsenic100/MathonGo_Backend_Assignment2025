@@ -1,0 +1,320 @@
+{
+	"info": {
+		"_postman_id": "mathongo-api-collection",
+		"name": "MathonGo Chapter Performance API",
+		"description": "A collection of endpoints for the Chapter Performance Dashboard API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All Chapters",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v1/chapters?class=Class 11&subject=Physics&status=Completed&isWeakChapter=true&page=1&limit=10",
+					"host": ["{{base_url}}"],
+					"path": ["api", "v1", "chapters"],
+					"query": [
+						{
+							"key": "class",
+							"value": "Class 11",
+							"description": "Filter by class (e.g., Class 11, Class 12)"
+						},
+						{
+							"key": "subject",
+							"value": "Physics",
+							"description": "Filter by subject (e.g., Physics, Chemistry, Mathematics)"
+						},
+						{
+							"key": "status",
+							"value": "Completed",
+							"description": "Filter by status (Not Started, In Progress, Completed)"
+						},
+						{
+							"key": "isWeakChapter",
+							"value": "true",
+							"description": "Filter by weak chapters (true/false)"
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"description": "Page number for pagination"
+						},
+						{
+							"key": "limit",
+							"value": "10",
+							"description": "Number of items per page"
+						}
+					]
+				},
+				"description": "Get all chapters with optional filters and pagination"
+			},
+			"response": [
+				{
+					"name": "Success Response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/chapters?class=Class 11&subject=Physics&status=Completed&isWeakChapter=true&page=1&limit=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "chapters"],
+							"query": [
+								{
+									"key": "class",
+									"value": "Class 11"
+								},
+								{
+									"key": "subject",
+									"value": "Physics"
+								},
+								{
+									"key": "status",
+									"value": "Completed"
+								},
+								{
+									"key": "isWeakChapter",
+									"value": "true"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"body": {
+						"chapters": [
+							{
+								"subject": "Physics",
+								"chapter": "Units and Dimensions",
+								"class": "Class 11",
+								"unit": "Mechanics 1",
+								"yearWiseQuestionCount": {
+									"2019": 2,
+									"2020": 6,
+									"2021": 8,
+									"2022": 4,
+									"2023": 6,
+									"2024": 3,
+									"2025": 10
+								},
+								"questionSolved": 39,
+								"status": "Completed",
+								"isWeakChapter": true
+							}
+						],
+						"pagination": {
+							"total": 1,
+							"page": 1,
+							"limit": 10,
+							"pages": 1
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Get Chapter by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/v1/chapters/:id",
+					"host": ["{{base_url}}"],
+					"path": ["api", "v1", "chapters", ":id"],
+					"variable": [
+						{
+							"key": "id",
+							"value": "chapter_id_here",
+							"description": "MongoDB ID of the chapter"
+						}
+					]
+				},
+				"description": "Get a specific chapter by its ID"
+			},
+			"response": [
+				{
+					"name": "Success Response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/chapters/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "chapters", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "chapter_id_here"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"body": {
+						"subject": "Physics",
+						"chapter": "Units and Dimensions",
+						"class": "Class 11",
+						"unit": "Mechanics 1",
+						"yearWiseQuestionCount": {
+							"2019": 2,
+							"2020": 6,
+							"2021": 8,
+							"2022": 4,
+							"2023": 6,
+							"2024": 3,
+							"2025": 10
+						},
+						"questionSolved": 39,
+						"status": "Completed",
+						"isWeakChapter": true
+					}
+				}
+			]
+		},
+		{
+			"name": "Upload Chapters (Admin Only)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{admin_api_key}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/path/to/your/chapters.json"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/chapters",
+					"host": ["{{base_url}}"],
+					"path": ["api", "v1", "chapters"]
+				},
+				"description": "Upload chapters via JSON file (Admin only)"
+			},
+			"response": [
+				{
+					"name": "Success Response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{admin_api_key}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/path/to/your/chapters.json"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/chapters",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "chapters"]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"body": {
+						"message": "Chapters processed",
+						"results": {
+							"successful": [
+								{
+									"subject": "Physics",
+									"chapter": "Units and Dimensions",
+									"class": "Class 11",
+									"unit": "Mechanics 1",
+									"yearWiseQuestionCount": {
+										"2019": 2,
+										"2020": 6,
+										"2021": 8,
+										"2022": 4,
+										"2023": 6,
+										"2024": 3,
+										"2025": 10
+									},
+									"questionSolved": 39,
+									"status": "Completed",
+									"isWeakChapter": true
+								}
+							],
+							"failed": []
+						}
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "admin_api_key",
+			"value": "your_admin_api_key_here",
+			"type": "string"
+		}
+	]
+} 
