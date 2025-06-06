@@ -67,9 +67,16 @@ const rateLimiterMiddleware = async (req, res, next) => {
 // Middleware for admin authentication
 function adminAuth(req, res, next) {
   const apiKey = req.headers['x-api-key'];
-  if (apiKey && apiKey === process.env.ADMIN_API_KEY) {
+  const adminKey = process.env.ADMIN_API_KEY;
+
+  console.log('[AdminAuth] Received API Key:', apiKey);
+  console.log('[AdminAuth] Expected Admin API Key:', adminKey);
+
+  if (apiKey && apiKey === adminKey) {
+    console.log('[AdminAuth] API Key matched. Proceeding.');
     return next();
   }
+  console.log('[AdminAuth] API Key mismatch or missing. Forbidden.');
   return res.status(403).json({ message: 'Forbidden: Admins only' });
 }
 
