@@ -26,11 +26,11 @@ Make sure you have the following installed on your system:
 1.  **Clone the repository:**
 
     ```bash
-# Clone the repository
-git clone https://github.com/ARsenic100/MathonGo_Backend_Assignment2025.git
-
-# Move into the project directory
-cd MathonGo_Backend_Assignment2025
+    # Clone the repository
+    git clone https://github.com/ARsenic100/MathonGo_Backend_Assignment2025.git
+    
+    # Move into the project directory
+    cd MathonGo_Backend_Assignment2025
 
     ```
 
