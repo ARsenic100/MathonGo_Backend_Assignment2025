@@ -62,7 +62,7 @@ const rateLimiterMiddleware = async (req, res, next) => {
 };
 
 // Apply rate limiting to all routes
-router.use(rateLimiterMiddleware);
+//router.use(rateLimiterMiddleware);
 
 // Middleware for admin authentication
 function adminAuth(req, res, next) {
