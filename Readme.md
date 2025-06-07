@@ -27,8 +27,8 @@ Make sure you have the following installed on your system:
 
     ```bash
     # Assuming you have a Git repository
-    # git clone https://github.com/ARsenic100/MathonGo_Backend_Assignment2025.git
-    # cd MathonGo_Backend_Assignment2025
+    git clone https://github.com/ARsenic100/MathonGo_Backend_Assignment2025.git
+    cd MathonGo_Backend_Assignment2025
     ```
 
 2.  **Install dependencies:**
