@@ -69,7 +69,8 @@ The server should start and listen on the port specified in your `.env` file (de
 To populate your MongoDB database with the initial chapter data from `all_subjects_chapter_data.json`, run the import script:
 
 ```bash
-node importData.js
+mongoimport --db yourDB --collection yourCollection --file all_subjects_chapter_data.json --jsonArray
+
 ```
 
 *Note: Ensure your MongoDB server is running and your `MONGODB_URI` is correctly set in the `.env` file before running this script.*
